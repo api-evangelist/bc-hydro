@@ -158,7 +158,18 @@ probes:
     note: DNS/connection failure.
   - url: https://api.bchydro.com/
     status: 000
-    note: DNS/connection failure.
+    note: >-
+      CORRECTED 2026-07-27 (enrichment round): this is not a DNS failure. The host
+      RESOLVES to 142.52.192.219 (ARIN NetName BCHYDRO, OrgName "B.C. Hydro") and
+      completes a TLS 1.3 handshake presenting a valid Entrust OV certificate —
+      C=CA, ST=British Columbia, O=British Columbia Hydro and Power Authority,
+      CN=*.bchydro.com, valid 2025-09-23 to 2026-10-24. TLS 1.2 is refused with
+      handshake_failure (alert 40), no ALPN is negotiated, no client certificate
+      is requested, and the connection is closed with no HTTP response for /,
+      /openapi.json, /swagger.json, /api-docs, /v1, /health, /graphql and
+      /.well-known/openid-configuration. Port 80 times out. A BC Hydro-owned API
+      host therefore EXISTS but serves nothing anonymously and is documented
+      nowhere — it remains deliberately unlisted in apis[].
   - url: https://docs.bchydro.com/
     status: 000
     note: DNS/connection failure.
@@ -200,7 +211,33 @@ probes:
     note: Body is the F5 WAF "Request Rejected" interstitial.
   - url: https://www.bchydro.com/robots.txt
     status: 200
-    note: Body is the F5 WAF "Request Rejected" interstitial when fetched programmatically.
+    note: >-
+      The F5 WAF "Request Rejected" interstitial is returned to curl, but the real
+      1,372-byte text/plain document is served to a browser user-agent (refetched
+      2026-07-27 in the enrichment round). It discloses an Adobe Experience Manager
+      layout, the customer SSO path /sso/UI/Login, /sap/* and /bctc/* — and no API,
+      developer or open-data path. The sitemap directive is commented out.
+  - url: https://www.bchydro.com/work-with-us/suppliers/doing-business-with-bchydro/contractor-cybersecurity.html
+    status: 200
+    note: >-
+      Found in the enrichment round. "As directed by the B.C. Utilities Commission
+      and the North American Electric Reliability Corporation (NERC), we've
+      developed cybersecurity policies and procedures for suppliers specific to
+      NERC's Critical Infrastructure Protection standard 013 (CIP-013-2)", with two
+      published PDFs (NERC CIP requirements digest for BC Hydro suppliers, 509 KB;
+      Contractor cybersecurity addendum, 206 KB) and the statement that adherence
+      is a contractual requirement. The only published compliance programme found.
+  - url: https://pypi.org/project/bchydro/
+    status: 200
+    note: >-
+      Community Python package "bchydro" 0.8.1 (MIT, Eric McNiece,
+      github.com/emcniece/bchydro) described as "BCHydro API". THIRD PARTY, not
+      first party — it drives the authenticated customer portal. npm returns no
+      bchydro package, and https://api.github.com/orgs/bchydro and
+      https://api.github.com/orgs/bc-hydro both return 404.
+  - url: https://www.bchydro.com/siteinfo/legal.html
+    status: 200
+    note: Website legal terms (footer). /siteinfo/terms.html and /siteinfo/copyright.html soft-404.
   - url: https://www.bchydro.com/sitemap.xml
     status: 200
     note: >-
@@ -260,7 +297,12 @@ probes:
     note: >-
       Undocumented JSON array of live outages, application/json, 26,749 bytes,
       18 records, parsed successfully. Anonymous but undocumented and
-      unlicensed — recorded here, deliberately NOT listed as an API.
+      unlicensed — recorded here, deliberately NOT listed as an API. Refetched in
+      the enrichment round 2026-07-27: still HTTP 200, 39,920 bytes, 28 records,
+      same 22-field shape. A JSON Schema was DERIVED from that live response and
+      saved to json-schema/bc-hydro-outages-map.json (with a two-record sample in
+      examples/), clearly labelled as an API Evangelist derivation, not a BC Hydro
+      contract. It remains unlisted in apis[].
   - url: https://www.bchydro.com/power-outages/app/get-outages.json
     status: 404
     note: Hard 404.
@@ -364,3 +406,80 @@ actions:
     Province, not by BC Hydro as an API product. No spec was harvested because
     none exists, so no openapi/ directory was created rather than inventing
     one.
+
+enrichment:
+  date: '2026-07-27'
+  round: 2
+  contractDiscovery: >-
+    Re-run in full against www.bchydro.com, app.bchydro.com and api.bchydro.com
+    with a browser user-agent (the earlier F5 WAF rejections were a client
+    fingerprint artefact, not evidence). Every /.well-known/ path, /openapi.json,
+    /openapi.yaml, /swagger.json, /api-docs, /graphql and /llms.txt returned HTTP
+    200 with a redirect to the /siteinfo/404.html soft-404 page on both web hosts.
+    No GraphQL surface existed to introspect and no MCP endpoint existed to POST
+    tools/list to. The finding of no machine-readable contract STANDS, with one
+    correction: api.bchydro.com resolves and serves a valid BC Hydro certificate
+    over TLS 1.3 while returning nothing to anonymous callers.
+  artifactsWritten:
+  - authentication/bc-hydro-authentication.yml
+  - conventions/bc-hydro-conventions.yml
+  - conformance/bc-hydro-conformance.yml
+  - lifecycle/bc-hydro-lifecycle.yml
+  - packages/bc-hydro-packages.yml
+  - well-known/bc-hydro-well-known.yml
+  - security/bc-hydro-domain-security.yml
+  - json-schema/bc-hydro-outages-map.json
+  - examples/bc-hydro-outages-map-example.json
+  - llms/bc-hydro-llms.txt
+  artifactsNotWritten:
+    reason_no_spec_to_ground_them_in:
+    - openapi/
+    - overlays/
+    - errors/
+    - scopes/
+    - data-model/
+    - skills/
+    - mcp/
+    - grpc/
+    - arazzo/
+    reason_provider_publishes_none:
+    - asyncapi/ (no event, webhook or streaming surface)
+    - sandbox/ (no test environment, credentials or fixtures)
+    - cli/ (no first-party CLI)
+    - components/ (no embeddable UI components)
+    - changelog/ (no dated API changelog)
+    - errors/decline-codes (not a payments provider)
+    - rate-limits/ (no published limits)
+    - plans/ (no API pricing — electricity tariffs only)
+  pointersDeliberatelyNotEmitted:
+    StatusPage: >-
+      The outage map is a consumer electricity-outage surface, not an API status
+      page; wiring StatusPage would misrepresent it.
+    Deprecation: No deprecation or sunset policy exists.
+    SDKs: No first-party client library exists in any registry.
+    WellKnown: The well-known probe index records only misses; nothing was found.
+    Idempotency: Both data surfaces are read-only with no idempotency contract.
+    SignUp: There is no developer signup — only a utility customer account.
+    ChangeLog: No API changelog is published.
+  pointersAdded:
+  - Authentication (artifact)
+  - Conventions
+  - Conformance
+  - Lifecycle
+  - Packages
+  - JSONSchema
+  - LLMsTxt
+  - DomainSecurity
+  - Compliance (NERC CIP-013-2 supplier cybersecurity programme)
+  - Support
+  - HelpCenter
+  - TermsOfService
+  - Accessibility
+  - News
+  - Tariff
+  - OpenData
+  identityFixes:
+  - >-
+    apis.yml image: was pointing at an unrelated Groq icon
+    (kinlane-images .../icons/groq.png). Replaced with BC Hydro's own header logo
+    SVG (HTTP 200, image/svg+xml).

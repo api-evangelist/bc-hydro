@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/bc-hydro/refs/heads/main/json-schema/bc-hydro-outages-map.json",
+  "title": "BC Hydro outage map feed record",
+  "description": "Schema DERIVED by API Evangelist from a live anonymous fetch of https://www.bchydro.com/power-outages/app/outages-map-data.json. This feed backs BC Hydro's public outage map. BC Hydro does not document, license, version or advertise it as an API, and publishes no schema of its own; nothing here is a BC Hydro contract and the shape may change without notice.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "area": {
+        "type": "string",
+        "examples": [
+          "West of HWY 97"
+        ]
+      },
+      "cause": {
+        "type": "string",
+        "examples": [
+          "Fire"
+        ]
+      },
+      "crewEta": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "examples": [
+          1785189600000
+        ]
+      },
+      "crewEtr": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "examples": [
+          1785191400000
+        ]
+      },
+      "crewStatus": {
+        "type": "string",
+        "examples": [
+          "ASSIGNED"
+        ]
+      },
+      "crewStatusDescription": {
+        "type": "string",
+        "examples": [
+          "Crew assigned"
+        ]
+      },
+      "crewStatusNote": {
+        "type": "string"
+      },
+      "dateOff": {
+        "type": "integer",
+        "examples": [
+          1785032760000
+        ]
+      },
+      "dateOn": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "examples": [
+          1785191400000
+        ]
+      },
+      "gisId": {
+        "type": "integer",
+        "examples": [
+          2772580
+        ]
+      },
+      "id": {
+        "type": "integer",
+        "examples": [
+          2803843
+        ]
+      },
+      "lastUpdated": {
+        "type": "integer",
+        "examples": [
+          1785163901000
+        ]
+      },
+      "latitude": {
+        "type": "number",
+        "examples": [
+          51.293529
+        ]
+      },
+      "longitude": {
+        "type": "number",
+        "examples": [
+          -121.854261
+        ]
+      },
+      "municipality": {
+        "type": "string",
+        "examples": [
+          "100 Mile House"
+        ]
+      },
+      "numCustomersOut": {
+        "type": "integer",
+        "examples": [
+          303
+        ]
+      },
+      "polygon": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      },
+      "regionId": {
+        "type": "integer",
+        "examples": [
+          848340027
+        ]
+      },
+      "regionName": {
+        "type": "string",
+        "examples": [
+          "Central Interior"
+        ]
+      },
+      "showDateOn": {
+        "type": "boolean"
+      },
+      "showEta": {
+        "type": "boolean"
+      },
+      "showEtr": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "area",
+      "cause",
+      "crewEta",
+      "crewEtr",
+      "crewStatus",
+      "crewStatusDescription",
+      "crewStatusNote",
+      "dateOff",
+      "dateOn",
+      "gisId",
+      "id",
+      "lastUpdated",
+      "latitude",
+      "longitude",
+      "municipality",
+      "numCustomersOut",
+      "polygon",
+      "regionId",
+      "regionName",
+      "showDateOn",
+      "showEta",
+      "showEtr"
+    ],
+    "additionalProperties": true
+  }
+}

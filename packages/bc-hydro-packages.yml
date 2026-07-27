@@ -1,0 +1,49 @@
+generated: '2026-07-27'
+method: searched
+source: npm, PyPI, Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist, crates.io, GitHub
+found: false
+official_packages: 0
+note: >-
+  BC Hydro publishes no client library in any package registry, no SDK page, and
+  no GitHub organization — https://api.github.com/orgs/bchydro and
+  https://api.github.com/orgs/bc-hydro both return "Not Found", and a GitHub org
+  search for "bchydro" returns only two unrelated handles (BCHydro-original,
+  bchydro-dc) with no evidence of BC Hydro ownership. An npm registry search for
+  "bchydro" returns zero packages and "bc hydro" returns only unrelated projects.
+  One genuine third-party library exists and is recorded below as unofficial. No
+  `SDKs` pointer is wired, because no first-party SDK exists.
+packages: []
+third_party_packages:
+- language: python
+  registry: pypi
+  name: bchydro
+  version_seen: 0.8.1
+  url: https://pypi.org/project/bchydro/
+  install: pip install bchydro
+  source_code: https://github.com/emcniece/bchydro
+  license: MIT
+  author: Eric McNiece
+  official: false
+  note: >-
+    Community library described as "BCHydro API". It is not published by BC Hydro
+    and there is no BC Hydro API for it to call — such libraries work by driving
+    the authenticated MyHydro customer portal on the account holder's behalf,
+    which is exactly the gap a Green Button Connect My Data implementation would
+    close. Recorded for completeness; it is not a first-party SDK and carries no
+    BC Hydro support or guarantee.
+registries_searched:
+- npm
+- pypi
+- maven-central
+- nuget
+- pkg.go.dev
+- rubygems
+- packagist
+- crates.io
+github:
+  org_bchydro: 404
+  org_bc_hydro: 404
+  note: No official BC Hydro GitHub presence was found.
+related:
+- authentication/bc-hydro-authentication.yml
+- conventions/bc-hydro-conventions.yml

@@ -49,7 +49,8 @@ accessModel:
   - authentication
   generated: '2026-07-27'
   method: manual
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/groq.png
+image: >-
+  https://www.bchydro.com/content/experience-fragments/bchydro-web/header/master/_jcr_content/root/container/container/image.coreimg.svg/1723787760686/logo-bchydro.svg
 tags:
 - Energy
 - Canada
@@ -70,6 +71,33 @@ modified: '2026-07-27'
 specificationVersion: '0.19'
 apis: []
 common:
+- type: DomainSecurity
+  url: security/bc-hydro-domain-security.yml
+- type: Authentication
+  name: Authentication profile — MyHydro customer SSO, no third-party auth
+  url: authentication/bc-hydro-authentication.yml
+- type: Conventions
+  name: Data-surface conventions (file export + undocumented outage feed)
+  url: conventions/bc-hydro-conventions.yml
+- type: Conformance
+  name: Standards conformance and regulatory posture
+  url: conformance/bc-hydro-conformance.yml
+- type: Lifecycle
+  name: Lifecycle — no API versioning, deprecation, SLA or status page
+  url: lifecycle/bc-hydro-lifecycle.yml
+- type: Packages
+  name: Package registry search — no first-party SDK
+  url: packages/bc-hydro-packages.yml
+- type: JSONSchema
+  name: >-
+    Schema derived from BC Hydro's undocumented public outage-map JSON feed — not
+    a BC Hydro API or contract
+  url: json-schema/bc-hydro-outages-map.json
+- type: LLMsTxt
+  url: llms/bc-hydro-llms.txt
+- type: Compliance
+  name: NERC CIP-013-2 supply-chain cybersecurity requirements for suppliers
+  url: https://www.bchydro.com/work-with-us/suppliers/doing-business-with-bchydro/contractor-cybersecurity.html
 - type: Website
   url: https://www.bchydro.com/
 - type: About
@@ -79,11 +107,29 @@ common:
 - type: Documentation
   url: https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html
 - type: Authentication
+  name: MyHydro log in (customer-portal SSO — the only authentication that exists)
   url: https://www.bchydro.com/login
+- type: Support
+  url: https://www.bchydro.com/contact.html
+- type: HelpCenter
+  url: https://app.bchydro.com/accounts-billing/get-help.html
+- type: TermsOfService
+  name: Legal (website terms)
+  url: https://www.bchydro.com/siteinfo/legal.html
 - type: PrivacyPolicy
   url: https://www.bchydro.com/siteinfo/privacy.html
+- type: Accessibility
+  url: https://www.bchydro.com/toolbar/about/accountability_reports/accessibility.html
 - type: Blog
   url: https://www.bchydro.com/news/press_centre.html
+- type: News
+  url: https://www.bchydro.com/news.html
+- type: Tariff
+  name: Terms, conditions & pricing (BCUC-approved electric tariff)
+  url: https://www.bchydro.com/toolbar/about/strategies-plans-regulatory/tariffs-terms-conditions.html
+- type: OpenData
+  name: BC Data Catalogue — one 2013 mapping dataset, published by the Province
+  url: https://catalogue.data.gov.bc.ca/organization/bc-hydro-and-power-authority
 - type: LinkedIn
   url: https://www.linkedin.com/company/bc-hydro
 - type: Regulator

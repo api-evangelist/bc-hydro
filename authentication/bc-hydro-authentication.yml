@@ -1,0 +1,84 @@
+generated: '2026-07-27'
+method: searched
+source: https://www.bchydro.com/login
+docs:
+- https://www.bchydro.com/login
+- https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+- https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html
+note: >-
+  BC Hydro publishes no OpenAPI, no OAuth discovery document and no third-party
+  authorization surface, so no securityScheme could be derived mechanically from a
+  specification. What exists is a customer-portal session SSO that gates a
+  human-initiated file download; it is recorded here as the real auth model, not
+  as an API authentication contract. Nothing in this file was inferred from a
+  standard BC Hydro does not implement.
+summary:
+  types:
+  - session-sso
+  oauth2_flows: []
+  api_key_in: []
+  discovery_document: false
+  self_serve_credentials: false
+  third_party_access: false
+schemes:
+- name: myhydro-customer-sso
+  type: session-sso
+  description: >-
+    Customer-portal single sign-on. https://www.bchydro.com/login (HTTP 200)
+    redirects to a ForgeRock/OpenAM-style endpoint at
+    https://app.bchydro.com/sso/UI/Login carrying goto, nonce and realm=bch-ps
+    parameters, and lands the authenticated customer on the BCHCustomerPortal.
+    The same path is reached from
+    https://app.bchydro.com/BCHCustomerPortal/web/login.html. The session, not a
+    token, is what authorizes the subsequent CSV / Green Button XML download.
+  login_url: https://www.bchydro.com/login
+  authorization_endpoint: https://app.bchydro.com/sso/UI/Login
+  realm: bch-ps
+  token_endpoint: null
+  bearer_tokens_issued_to_third_parties: false
+  source: observed redirect chain, 2026-07-27
+access_gate:
+  self_serve: false
+  gate: customer-account-required
+  steps:
+  - Be a BC Hydro account holder (BC Hydro is the monopoly electricity retailer in its service area).
+  - Register for a MyHydro account.
+  - Sign in at https://www.bchydro.com/login.
+  - 'Download your own data manually: a CSV or Green Button XML file of metered
+    electricity use from the billing pages, available through the previous day,
+    up to three years of history.'
+  - >-
+    Large, multi-unit or strata customers may instead submit a peak-load-data
+    request form and receive a report; contractors and consultants may request on
+    a customer's behalf, subject to BC Hydro demanding "authentication questions
+    or proof" of authorization.
+  developer_signup: null
+  api_keys_issued: false
+  oauth_client_registration: false
+  accreditation_path: null
+third_party_access:
+  available: false
+  detail: >-
+    No third party can obtain a BC Hydro customer's usage or billing data
+    programmatically. There is no Green Button Connect My Data, no OAuth 2.0
+    authorization or token endpoint, no vendor onboarding form, no data-recipient
+    terms and no published resource base URI. This is the structural difference
+    from a mandated Ontario distributor such as Hydro One, which O. Reg. 633/21
+    compels to run a live CMD OAuth surface — no equivalent regulation binds BC
+    Hydro.
+machine_hosts:
+  api.bchydro.com: >-
+    Resolves to a BC Hydro-owned IP and presents a valid Entrust OV certificate
+    issued to British Columbia Hydro and Power Authority, but rejects TLS 1.2 and
+    returns nothing over TLS 1.3 to any anonymous HTTP request. No authentication
+    scheme is advertised (no WWW-Authenticate, no client-certificate request, no
+    ALPN). Whatever it fronts is not anonymously discoverable.
+discovery:
+  openid_configuration: 'https://app.bchydro.com/.well-known/openid-configuration — HTTP 200 soft 404 (redirects to /siteinfo/404.html); no discovery document'
+  oauth_authorization_server: 'https://www.bchydro.com/.well-known/oauth-authorization-server — HTTP 200 soft 404; no discovery document'
+  oauth_protected_resource: 'https://www.bchydro.com/.well-known/oauth-protected-resource — HTTP 200 soft 404; no discovery document'
+related:
+- conformance/bc-hydro-conformance.yml
+- conventions/bc-hydro-conventions.yml
+- lifecycle/bc-hydro-lifecycle.yml
+- well-known/bc-hydro-well-known.yml

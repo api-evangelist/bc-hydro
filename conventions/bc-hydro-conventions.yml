@@ -1,0 +1,92 @@
+generated: '2026-07-27'
+method: searched
+source: https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+note: >-
+  Cross-cutting semantics for the only two BC Hydro data surfaces that exist: the
+  authenticated Green Button / CSV file export inside MyHydro, and the
+  undocumented JSON feed behind the public outage map. BC Hydro publishes no
+  endpoint reference, so anything not stated by BC Hydro or directly observed is
+  recorded as unknown rather than guessed. There is no API contract here to
+  conform to — this artifact exists so an integrator knows exactly what they are
+  dealing with.
+authentication:
+  style: MyHydro customer-portal session SSO (ForgeRock/OpenAM, realm=bch-ps)
+  detail: authentication/bc-hydro-authentication.yml
+  third_party_tokens: false
+  transport: TLS 1.3, HSTS max-age 31536000
+delivery_model:
+  primary: human-initiated file download inside an authenticated session
+  programmatic: false
+  bulk_request_channel: >-
+    Peak load data for buildings/stratas is requested through a web form and
+    returned as a report — kWh in one-hour intervals — not through a feed.
+payload:
+  formats:
+  - 'Green Button XML (ESPI) — customer electricity use export; version and profile unpublished'
+  - 'CSV — electricity use and billing history export'
+  - 'PDF — annual bill summary'
+  - 'application/json — the undocumented outage-map feed'
+  history_window: up to three years of billing/consumption history; usage available through the previous day
+observed_json_feed:
+  url: https://www.bchydro.com/power-outages/app/outages-map-data.json
+  documented_by_provider: false
+  licensed: false
+  media_type: application/json
+  shape: >-
+    A bare JSON array (no envelope, no pagination, no metadata block) of outage
+    objects. Observed 2026-07-27: 28 records, 39,920 bytes. Fields: id, gisId,
+    regionId, regionName, municipality, area, cause, numCustomersOut, crewStatus,
+    crewStatusDescription, crewStatusNote, crewEta, crewEtr, dateOff, dateOn,
+    lastUpdated, showEta, showEtr, showDateOn, latitude, longitude, polygon.
+  timestamps: epoch milliseconds (dateOff, dateOn, lastUpdated, crewEta, crewEtr); nullable where unknown
+  geometry: latitude/longitude decimal degrees plus a polygon coordinate array
+  schema: json-schema/bc-hydro-outages-map.json
+  example: examples/bc-hydro-outages-map-example.json
+  stability: >-
+    No version, no changelog, no deprecation notice, no licence and no
+    documentation. It may change or disappear without notice; treat it as an
+    internal browser endpoint, not a contract.
+  client_note: >-
+    A programmatic client with a non-browser fingerprint is answered by the F5 WAF
+    "Request Rejected" interstitial on some paths; a browser user-agent is served
+    normally.
+pagination:
+  style: none
+  note: The outage feed returns the full current set in one array; the file exports are whole-file downloads.
+idempotency:
+  supported: false
+  note: >-
+    Both surfaces are read-only and there is no write path, no idempotency key and
+    no retry contract. No `Idempotency` pointer is emitted.
+rate_limiting:
+  documented: false
+  observed_headers: none
+  note: >-
+    No published rate limits and no RateLimit/Retry-After headers observed. An F5
+    WAF fronts the site and rejects clients on fingerprint rather than on a
+    published quota.
+errors:
+  envelope: none
+  problem_details_rfc9457: false
+  note: >-
+    Unknown paths are answered with HTTP 200 plus a redirect to
+    https://www.bchydro.com/siteinfo/404.html — a soft 404. Status codes are
+    therefore not a reliable signal on this site; the final URL must be inspected.
+versioning:
+  detail: lifecycle/bc-hydro-lifecycle.yml
+  in_url: false
+  note: Nothing on either surface is versioned.
+request_tracing:
+  request_id_header: unknown
+webhooks:
+  supported: false
+  note: No webhook, callback, event or streaming surface exists; no AsyncAPI artifact is emitted.
+support:
+  contact_page: https://www.bchydro.com/contact.html
+  help_centre: https://app.bchydro.com/accounts-billing/get-help.html
+  developer_support: null
+related:
+- authentication/bc-hydro-authentication.yml
+- conformance/bc-hydro-conformance.yml
+- lifecycle/bc-hydro-lifecycle.yml
+- json-schema/bc-hydro-outages-map.json

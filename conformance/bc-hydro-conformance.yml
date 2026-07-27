@@ -1,0 +1,168 @@
+generated: '2026-07-27'
+method: searched
+source: https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+note: >-
+  Asserted from BC Hydro's own published pages and from live anonymous probes.
+  BC Hydro publishes no machine-readable API contract, so nothing here is derived
+  from a specification. Every entry carries its evidence; where a standard is
+  simply absent from BC Hydro's surface, conforms is false rather than unknown,
+  and where the artifact could not be inspected that is said plainly.
+standards:
+- id: green-button-download-my-data
+  conforms: true
+  evidence: >-
+    BC Hydro's billing page (https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html,
+    HTTP 200, fetched 2026-07-27) states under "Electricity use history" that a
+    customer can "Download a CSV or Green Button XML file with your metered
+    electricity use", available through the previous day, with up to three years
+    of history retained. Voluntary adoption — no regulation compels it.
+  caveat: >-
+    File export only, inside an authenticated MyHydro session. The XML itself
+    could not be inspected because no customer account was used, and BC Hydro
+    publishes no ESPI version, schema reference or conformance level.
+- id: green-button-connect-my-data
+  conforms: false
+  evidence: >-
+    No OAuth authorization surface, no third-party vendor onboarding, no
+    data-recipient terms and no published resource base URI exist anywhere on
+    bchydro.com. A third party cannot reach a customer's data programmatically.
+- id: naesb-req21-espi
+  conforms: unknown
+  evidence: >-
+    Green Button XML implies NAESB REQ.21 ESPI, but BC Hydro names no version and
+    the file is emitted only to an authenticated customer, so the profile could
+    not be verified.
+- id: green-button-alliance-certification
+  conforms: false
+  evidence: >-
+    https://www.greenbuttonalliance.org/certification (HTTP 200) describes the DMD
+    and CMD testing programmes but does not name BC Hydro; the only Canadian
+    organization named there is Enbridge Gas, as a Sponsor Member. BC Hydro makes
+    no certification claim on its own site.
+- id: oauth2
+  conforms: false
+  evidence: No OAuth 2.0 authorization or token endpoint is exposed to third parties.
+- id: openid-connect
+  conforms: false
+  evidence: >-
+    /.well-known/openid-configuration on both www.bchydro.com and app.bchydro.com
+    returns HTTP 200 and redirects to the /siteinfo/404.html soft-404 page; no
+    discovery document is served. Customer login is a ForgeRock/OpenAM-style
+    session SSO (realm=bch-ps), not an OIDC provider open to relying parties.
+- id: oauth2-discovery-rfc8414
+  conforms: false
+  evidence: '/.well-known/oauth-authorization-server soft-404s.'
+- id: openapi
+  conforms: false
+  evidence: >-
+    /openapi.json, /openapi.yaml, /swagger.json and /api-docs soft-404 on both
+    hosts; the 3,703-URL sitemap.xml contains no developer, open-data or API
+    path; api.bchydro.com serves nothing to an anonymous caller.
+- id: graphql
+  conforms: false
+  evidence: '/graphql soft-404s on both hosts; there is no surface to introspect.'
+- id: asyncapi
+  conforms: false
+  evidence: No event, streaming or webhook surface is published.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: No API error contract is published.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: '/.well-known/security.txt and /security.txt soft-404 on both hosts.'
+- id: api-catalog-rfc9727
+  conforms: false
+  evidence: '/.well-known/api-catalog soft-404s.'
+- id: llms-txt
+  conforms: false
+  evidence: '/llms.txt soft-404s on both hosts.'
+- id: tls-1-3
+  conforms: true
+  evidence: >-
+    www.bchydro.com negotiates TLSv1.3 with HSTS max-age=31536000;
+    api.bchydro.com accepts only TLS 1.3 and refuses TLS 1.2 with
+    handshake_failure. See security/bc-hydro-domain-security.yml.
+- id: dnssec
+  conforms: true
+  evidence: 'bchydro.com is DNSSEC-signed (probed 2026-07-27).'
+- id: dmarc
+  conforms: true
+  evidence: 'DMARC present with policy p=reject.'
+- id: nerc-cip-013-2
+  conforms: true
+  evidence: >-
+    BC Hydro publishes supply-chain cybersecurity requirements for suppliers at
+    https://www.bchydro.com/work-with-us/suppliers/doing-business-with-bchydro/contractor-cybersecurity.html
+    (HTTP 200): "As directed by the B.C. Utilities Commission and the North
+    American Electric Reliability Corporation (NERC), we've developed
+    cybersecurity policies and procedures for suppliers specific to NERC's
+    Critical Infrastructure Protection standard 013 (CIP-013-2)", with two
+    published PDFs — a "NERC CIP requirements digest for BC Hydro suppliers"
+    (509 KB) and a "Contractor cybersecurity addendum" (206 KB). Adherence is
+    stated to be a contractual requirement.
+  scope: >-
+    Bulk electric system and critical cyber systems supply chain — an operational
+    technology regime, not an API or customer-data compliance programme.
+- id: ocpp
+  conforms: false
+  evidence: >-
+    No protocol is named on the EV public-charging or roaming pages; roaming with
+    Blink, ChargePoint, FLO, Ivy, Shell Recharge and others is described
+    commercially, with no developer access.
+- id: ocpi
+  conforms: false
+- id: openadr
+  conforms: false
+- id: ieee-2030-5
+  conforms: false
+- id: iec-cim-61968-61970
+  conforms: false
+- id: cdr-consumer-data-standards
+  conforms: false
+  evidence: Australian CDR does not apply; Canada has no federal energy consumer data right.
+regulatory:
+- id: bcuc-rate-regulation
+  name: B.C. Utilities Commission economic regulation (Utilities Commission Act)
+  url: https://www.bcuc.com/
+  applies: true
+  obligation: >-
+    Rate and tariff regulation of BC Hydro. No consumer data-sharing or open-data
+    obligation attaches. Terms, conditions and pricing are published as tariffs at
+    https://www.bchydro.com/toolbar/about/strategies-plans-regulatory/tariffs-terms-conditions.html
+- id: bcuc-order-g-127-06
+  name: BCUC Order G-127-06 transmission transaction-data postings
+  url: https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/transaction-data.html
+  applies: true
+  obligation: >-
+    Post economic test results daily and Network Economy / Non-Firm utilization
+    reports weekly. Discharged as documents; no format, feed or API is disclosed.
+- id: ontario-reg-633-21
+  name: O. Reg. 633/21 (Energy Data), Electricity Act, 1998
+  url: https://www.ontario.ca/laws/regulation/210633
+  applies: false
+  applies_evidence: >-
+    Binds Ontario electricity and natural gas distributors only. It has no force
+    in British Columbia, and neither Canada nor B.C. has enacted an equivalent.
+    This is why BC Hydro's Green Button support is voluntary and file-only while
+    Hydro One runs a mandated Connect My Data OAuth surface.
+certifications:
+- id: soc-2
+  claimed: false
+- id: iso-27001
+  claimed: false
+- id: pci-dss
+  claimed: false
+compliance_program_published: true
+compliance_program_url: https://www.bchydro.com/work-with-us/suppliers/doing-business-with-bchydro/contractor-cybersecurity.html
+compliance_program_note: >-
+  The one published compliance programme is the NERC CIP-013-2 supply-chain
+  cybersecurity requirement set for suppliers, directed by the BCUC and NERC. It
+  is real, named and evidenced, so a `Compliance` pointer is wired to that page —
+  but it governs the bulk electric system supply chain, not an API or a customer
+  data-sharing programme. No trust centre, SOC 2, ISO 27001 or PCI attestation is
+  published, and no vulnerability disclosure policy was found.
+related:
+- authentication/bc-hydro-authentication.yml
+- conventions/bc-hydro-conventions.yml
+- lifecycle/bc-hydro-lifecycle.yml
+- security/bc-hydro-domain-security.yml

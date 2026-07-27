@@ -1,0 +1,116 @@
+generated: '2026-07-27'
+method: probed
+source: live HTTP probes, 2026-07-27
+host: https://www.bchydro.com
+found: false
+note: >-
+  No /.well-known/ discovery surface exists on any BC Hydro host. www.bchydro.com
+  and app.bchydro.com are one Adobe Experience Manager site behind an F5 WAF: an
+  unknown path is answered with HTTP 200 and a redirect to
+  https://www.bchydro.com/siteinfo/404.html (a soft 404 HTML page), and a
+  programmatic client with a non-browser fingerprint is answered instead with the
+  F5 "Request Rejected" interstitial. A 200 on this site is therefore not evidence
+  of a document. Every candidate below was fetched with a browser user-agent and
+  the final URL inspected; every one landed on the soft-404 page except
+  /robots.txt. No document was saved and no `WellKnown` or `SecurityTxt` pointer
+  is wired.
+hosts_probed:
+- www.bchydro.com
+- app.bchydro.com
+hosts_resolving_but_closed:
+- host: api.bchydro.com
+  note: >-
+    Resolves to 142.52.192.219 (ARIN NetName BCHYDRO, OrgName "B.C. Hydro") and
+    completes a TLS 1.3 handshake presenting a valid Entrust OV certificate —
+    C=CA, ST=British Columbia, O=British Columbia Hydro and Power Authority,
+    CN=*.bchydro.com, valid 2025-09-23 to 2026-10-24. TLS 1.2 is refused with
+    handshake_failure (alert 40); no ALPN is negotiated; no client certificate is
+    requested; and the connection is torn down before any HTTP response for
+    /, /openapi.json, /swagger.json, /api-docs, /v1, /health, /graphql and
+    /.well-known/openid-configuration. Port 80 times out. An API host exists and
+    is BC Hydro's own, but nothing is served to an anonymous caller — it is not a
+    documented, reachable public API and is NOT listed in apis[].
+hosts_not_resolving:
+- developer.bchydro.com
+- developers.bchydro.com
+- docs.bchydro.com
+- data.bchydro.com
+- apis.bchydro.com
+- services.bchydro.com
+- status.bchydro.com
+- trust.bchydro.com
+- security.bchydro.com
+- openapi.bchydro.com
+- greenbutton.bchydro.com
+documents:
+- path: /.well-known/security.txt
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html (probed on both hosts)
+- path: /security.txt
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /.well-known/openid-configuration
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html (probed on both hosts)
+- path: /.well-known/oauth-authorization-server
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /.well-known/oauth-protected-resource
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /.well-known/api-catalog
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /.well-known/ai-plugin.json
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /.well-known/mcp.json
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /llms.txt
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html; no provider llms.txt exists
+- path: /openapi.json
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /openapi.yaml
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /swagger.json
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /api-docs
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html
+- path: /graphql
+  status: 200
+  file: null
+  note: soft 404 — redirects to /siteinfo/404.html; no GraphQL surface to introspect
+- path: /robots.txt
+  status: 200
+  file: null
+  note: >-
+    Real text/plain document (1,372 bytes). Discloses an Adobe Experience Manager
+    layout (/content/dam/, /etc/designs/), the customer SSO path /sso/UI/Login,
+    /sap/*, /bctc/* and extranet document folders. No API, developer or open-data
+    path is disclosed, and the sitemap directive is commented out.
+mcp:
+  tools_list_probed: false
+  note: No MCP server or endpoint is published, so there was nothing to POST tools/list to.
+related:
+- authentication/bc-hydro-authentication.yml
+- conformance/bc-hydro-conformance.yml
+- security/bc-hydro-domain-security.yml

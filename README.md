@@ -30,7 +30,9 @@ British Columbia Hydro and Power Authority (BC Hydro) is a provincial Crown corp
 
 None. BC Hydro documents no public API.
 
-There is no `developer.bchydro.com`, `developers.bchydro.com`, `api.bchydro.com`, `docs.bchydro.com` or `data.bchydro.com` — all fail to resolve. There is no `/developers`, `/api` or `/data` path, no `/openapi.json` or `/swagger.json`, and no OpenAPI, Swagger, or Postman artifact anywhere across the 3,703 URLs in the site's own `sitemap.xml`. No open data portal is published.
+There is no `developer.bchydro.com`, `developers.bchydro.com`, `docs.bchydro.com` or `data.bchydro.com` — none resolve. There is no `/developers`, `/api` or `/data` path, no `/openapi.json` or `/swagger.json`, and no OpenAPI, Swagger, or Postman artifact anywhere across the 3,703 URLs in the site's own `sitemap.xml`. No open data portal is published.
+
+`api.bchydro.com` does resolve — to a BC Hydro-owned IP that completes a TLS 1.3 handshake with a valid Entrust OV certificate issued to "British Columbia Hydro and Power Authority" — but it refuses TLS 1.2 and returns nothing to any anonymous HTTP request on any path. A BC Hydro API host exists; nothing about it is public or documented, so it is not listed as an API.
 
 ## Energy data posture
 
@@ -44,6 +46,22 @@ There is no `developer.bchydro.com`, `developers.bchydro.com`, `api.bchydro.com`
 - **Home market:** Canada — British Columbia.
 
 Full probe log, HTTP statuses, and evidence are recorded in [review.yml](review.yml).
+
+## Artifacts
+
+Every artifact below records what was probed and what was found — the misses are the finding.
+
+- [authentication/bc-hydro-authentication.yml](authentication/bc-hydro-authentication.yml) — MyHydro customer-portal SSO (ForgeRock/OpenAM, realm `bch-ps`); no third-party auth, no OAuth, no discovery document.
+- [conventions/bc-hydro-conventions.yml](conventions/bc-hydro-conventions.yml) — the semantics of the two real surfaces: the authenticated file export and the undocumented outage JSON feed (soft 404s, WAF behaviour, epoch-ms timestamps, no pagination, no idempotency).
+- [conformance/bc-hydro-conformance.yml](conformance/bc-hydro-conformance.yml) — Green Button DMD yes / CMD no, no OAuth, no OIDC, no OpenAPI, plus TLS/DNSSEC/DMARC and the NERC CIP-013-2 supplier programme.
+- [lifecycle/bc-hydro-lifecycle.yml](lifecycle/bc-hydro-lifecycle.yml) — no API versioning, deprecation policy, SLA, changelog or status page; the regulated tariff lifecycle instead.
+- [packages/bc-hydro-packages.yml](packages/bc-hydro-packages.yml) — no first-party SDK in any registry, no GitHub org; one unofficial community Python package.
+- [well-known/bc-hydro-well-known.yml](well-known/bc-hydro-well-known.yml) — the full `/.well-known/` probe index (all soft 404s) plus the `api.bchydro.com` TLS finding.
+- [security/bc-hydro-domain-security.yml](security/bc-hydro-domain-security.yml) — TLS 1.3, HSTS, DNSSEC signed, SPF, DMARC `p=reject`, no CAA.
+- [json-schema/bc-hydro-outages-map.json](json-schema/bc-hydro-outages-map.json) + [examples/](examples/bc-hydro-outages-map-example.json) — a schema **derived by API Evangelist** from a live fetch of the undocumented outage-map feed. Not a BC Hydro contract.
+- [llms/bc-hydro-llms.txt](llms/bc-hydro-llms.txt) — generated agent briefing on what exists and what does not.
+
+No `openapi/`, `overlays/`, `errors/`, `scopes/`, `data-model/`, `skills/`, `mcp/`, `arazzo/`, `asyncapi/`, `sandbox/`, `cli/`, `components/` or `changelog/` artifacts were created: there is no specification to ground them in and BC Hydro publishes none of those surfaces. Nothing was invented to fill a directory.
 
 ## Common Properties
 

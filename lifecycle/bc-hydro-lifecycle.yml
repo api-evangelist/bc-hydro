@@ -1,0 +1,67 @@
+generated: '2026-07-27'
+method: searched
+source: https://www.bchydro.com/toolbar/about/strategies-plans-regulatory.html
+note: >-
+  BC Hydro publishes no API versioning policy, no deprecation policy, no API SLA,
+  no API changelog and no API status page — because it publishes no API. What it
+  does publish is a regulated utility lifecycle: BCUC-approved tariffs, terms and
+  conditions of service, and a consumer outage map for the electricity service
+  itself. Those are recorded here so the absence is explicit, not implied.
+versioning:
+  scheme: none
+  current: null
+  published_by_provider: false
+  docs: null
+  note: >-
+    Neither the Green Button / CSV export nor the undocumented outage-map JSON
+    feed carries a version, and no ESPI version is published.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No deprecation or sunset policy exists for any data surface. The outage-map
+    JSON feed is undocumented, so it can change or be withdrawn with no notice at
+    all. No `Deprecation` pointer is emitted.
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No API SLA. Service reliability for electricity supply is regulated by the
+    BCUC under the electric tariff, which is a different thing entirely.
+status_page: null
+status_page_note: >-
+  No API or platform status page exists. https://www.bchydro.com/power-outages/app/outage-map.html
+  (HTTP 200) is a consumer electricity-outage map — the operational status of the
+  power system, not of a developer platform — and its backing JSON feed is
+  undocumented. Emitting a `StatusPage` pointer for it would misrepresent an
+  outage map as an API status surface, so none is wired.
+service_status_surfaces:
+- url: https://www.bchydro.com/power-outages/app/outage-map.html
+  kind: consumer electricity outage map
+  machine_readable_backing: https://www.bchydro.com/power-outages/app/outages-map-data.json
+  documented_as_api: false
+- url: https://app.bchydro.com/report-outage/web/report-outage.html
+  kind: customer outage reporting form
+  documented_as_api: false
+regulatory_lifecycle:
+  tariffs: https://www.bchydro.com/toolbar/about/strategies-plans-regulatory/tariffs-terms-conditions.html
+  tariff_note: >-
+    Terms, conditions and pricing are set out in BCUC-approved tariffs (the
+    Electric Tariff), amended through regulatory proceedings rather than through a
+    product changelog.
+  regulator: https://www.bcuc.com/
+  transmission_postings: >-
+    Pursuant to BCUC Order G-127-06, economic test results are posted daily and
+    Network Economy / Non-Firm utilization reports weekly at
+    https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/transaction-data.html —
+    documents on a published cadence, not feeds.
+deprecated_operations: []
+change_communication:
+  changelog: null
+  changelog_note: No API changelog or release notes are published; no `ChangeLog` pointer is emitted.
+  news: https://www.bchydro.com/news.html
+  media_centre: https://www.bchydro.com/news/press_centre.html
+  contact: https://www.bchydro.com/contact.html
+related:
+- conformance/bc-hydro-conformance.yml
+- conventions/bc-hydro-conventions.yml
