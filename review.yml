@@ -1,0 +1,366 @@
+aid: bc-hydro
+name: BC Hydro
+review:
+  question: >-
+    Does BC Hydro publish a documented public API — either a mandated consumer
+    energy data API (Green Button / Consumer Data Right style) or an open
+    grid/market data API?
+  answer: false
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  method: >-
+    Anonymous HTTP probing of bchydro.com and app.bchydro.com, subdomain
+    resolution, sitemap.xml enumeration (3,703 URLs), CKAN queries against the
+    BC Data Catalogue, and reading of BC Hydro's own billing, load-data,
+    transmission-scheduling and EV public-charging pages. No credentials were
+    used and no customer account was created.
+
+energyDataPosture:
+  homeMarket: Canada — British Columbia
+  tier: utility-retailer (vertically integrated provincial Crown corporation — generation, transmission, distribution and monopoly retail in one entity)
+  regulator: B.C. Utilities Commission (BCUC) — https://www.bcuc.com/ (200) — economic/rate regulation only, no data-sharing obligation
+  mandateRegime: green-button-voluntary
+  mandateStatus: voluntary-adopted
+  mandateVerbatim: >-
+    No consumer energy data mandate applies to BC Hydro. Ontario Regulation
+    633/21 (Energy Data, under the Electricity Act, 1998) compels Ontario
+    electricity and natural gas distributors to implement Green Button Download
+    My Data and Connect My Data and to be certified by the Green Button
+    Alliance — it binds Ontario distributors only and has no force in British
+    Columbia. Australia's Consumer Data Right energy sector does not apply.
+    Canada has no federal energy consumer data right; the federal
+    Consumer-Driven Banking Act covers banking, not energy. British Columbia
+    has enacted no equivalent regulation. BC Hydro's Green Button support is
+    therefore VOLUNTARY, not mandated.
+  mandateEvidence:
+    verified:
+      - >-
+        BC Hydro's own billing page at
+        https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+        (HTTP 200, fetched 2026-07-27) states under "Electricity use history"
+        that a customer can "Download a CSV or Green Button XML file with your
+        metered electricity use," that data is "available through the previous
+        day," and that up to three years of history is retained. This is
+        first-party evidence of Green Button Download My Data (DMD) in the
+        file-export sense.
+    notVerified:
+      - >-
+        No Green Button Alliance certification for BC Hydro was found.
+        https://www.greenbuttonalliance.org/certification (HTTP 200) describes
+        the DMD and CMD testing programs but publishes no list of certified
+        utilities on that page; the only Canadian organization named there is
+        Enbridge Gas, as a GBA Sponsor Member.
+      - >-
+        No ESPI/Green Button version, schema reference, or conformance claim is
+        published anywhere on bchydro.com.
+      - >-
+        The XML file itself could not be inspected — it is emitted only inside
+        an authenticated MyHydro session, and no account was used.
+  mandateStatusReasoning: >-
+    Recorded as voluntary-adopted, NOT live-implemented. BC Hydro adopted the
+    Green Button file format without any obligation to do so, and says so on
+    its own site — but a downloadable XML file behind a customer login is not a
+    standards-conformant API surface. No base URI, no OAuth authorization
+    endpoint, no register entry, and no certification could be found, so the
+    stricter live-implemented grade is not earned. Equally, this is not a mere
+    compliance claim: the DMD export is documented by BC Hydro itself, so it is
+    not downgraded to live-claimed-unverified for the file half.
+
+  dataStandard: Green Button / ESPI (Download My Data file export only; no version or conformance level published). No Connect My Data. No CDR Consumer Data Standards, OCPP, OCPI, OpenADR, IEEE 2030.5, or IEC CIM reference found anywhere on the site.
+
+  consumerDataApi:
+    available: false
+    detail: >-
+      A third party cannot obtain an individual BC Hydro customer's usage or
+      billing data through any documented API. The only route to that data is
+      the account holder personally signing in to MyHydro and downloading a CSV
+      or Green Button XML file. There is no Green Button Connect My Data, no
+      OAuth 2.0 authorization surface, no third-party vendor registration form,
+      no terms and conditions for data recipients, and no published resource
+      base URI. Bulk/large-customer load data
+      (https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html,
+      HTTP 200) is delivered as reports in response to a manual request form,
+      with BC Hydro reserving the right to demand "authentication questions or
+      proof" of authorization; data is described as kWh in "one-hour intervals"
+      with no API, feed, or machine-readable delivery mentioned.
+  marketDataOpen:
+    available: false
+    detail: >-
+      BC Hydro publishes no open data portal and no documented public grid,
+      system, or market data API. Wholesale transmission information goes to an
+      OATI-hosted OASIS node which
+      https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/oasis.html
+      (HTTP 200) describes as allowing "registered users to make reservations
+      for transmission service on the BC Hydro transmission system"; the node
+      links it names (http://www.oasis.oati.com/cwo_default.htm and
+      http://www.oasis.oati.com/bpat/index.html) did not resolve anonymously
+      (curl exit / HTTP 000). The BCUC-ordered postings at
+      https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/transaction-data.html
+      (HTTP 200) — economic test results posted daily, Network Economy and
+      Non-Firm utilization reports posted weekly, "Pursuant to B.C. Utilities
+      Commission Order Number G-127-06" — are documents, with no format, feed,
+      or API disclosed.
+    nuanceRecorded:
+      - >-
+        BC Data Catalogue (CKAN) organization "bc-hydro-and-power-authority"
+        exists and holds exactly ONE dataset: "BC Hydro Resource Options
+        Mapping - 2013," reachable anonymously via an OGC WMS GetCapabilities
+        service and a KML loader on openmaps.gov.bc.ca. Real open data, but a
+        2013 planning map layer, not grid or market data.
+      - >-
+        An UNDOCUMENTED JSON feed backing the public outage map was found at
+        https://www.bchydro.com/power-outages/app/outages-map-data.json
+        (HTTP 200, application/json, 26,749 bytes on 2026-07-27, parsed as a
+        JSON array of 18 outage objects carrying id, gisId, regionId,
+        municipality, area, cause, numCustomersOut, crewStatus, dateOff,
+        dateOn, lastUpdated, latitude, longitude and an outage polygon). It is
+        anonymous and machine-readable but is nowhere documented, licensed, or
+        referenced as an API by BC Hydro, so it is NOT listed in apis.yml.
+    split: >-
+      The split is that there is barely a split — BC Hydro is closed on both
+      axes. Consumer data is real, standards-shaped, and reachable only by the
+      customer in person; market data is registration-gated (OASIS) or
+      published as documents. This is the unmandated Crown-monopoly opposite of
+      an Ontario distributor like Hydro One, which is compelled by Ontario Reg
+      633/21 to stand up a live Green Button CMD OAuth surface for third
+      parties.
+
+  accessGate: customer-account-required
+  accessGateDetail: >-
+    There is nothing for a developer to sign up for. To reach any BC Hydro
+    energy data a person must (1) be a BC Hydro account holder, (2) register
+    for a MyHydro account, (3) sign in at https://www.bchydro.com/login, and
+    (4) manually download their own CSV or Green Button XML file from the
+    billing/consumption pages. Large or multi-unit customers may additionally
+    submit a peak-load-data request form and receive a report. No API key, no
+    OAuth client registration, no accreditation path, no partner program, and
+    no data licence agreement is published.
+  authModel: >-
+    Customer-portal session SSO only. https://www.bchydro.com/login (HTTP 200)
+    redirects to a ForgeRock/OpenAM-style endpoint at
+    https://app.bchydro.com/sso/UI/Login?goto=...&realm=bch-ps carrying a nonce
+    and a realm parameter, then on to the BCHCustomerPortal. No OAuth 2.0
+    authorization or token endpoint is exposed for third parties, no client
+    registration exists, and no mTLS or accreditation scheme applies.
+    https://app.bchydro.com/.well-known/openid-configuration was rejected by
+    the site WAF (F5 "Request Rejected" interstitial) rather than served, so no
+    OpenID Connect discovery document is available anonymously.
+
+probes:
+  - url: https://www.bchydro.com/
+    status: 200
+    note: Resolves to https://www.bchydro.com/index.html. Corporate site.
+  - url: https://developer.bchydro.com/
+    status: 000
+    note: DNS/connection failure — no developer subdomain exists.
+  - url: https://developers.bchydro.com/
+    status: 000
+    note: DNS/connection failure.
+  - url: https://api.bchydro.com/
+    status: 000
+    note: DNS/connection failure.
+  - url: https://docs.bchydro.com/
+    status: 000
+    note: DNS/connection failure.
+  - url: https://data.bchydro.com/
+    status: 000
+    note: DNS/connection failure.
+  - url: https://www.bchydro.com/developers
+    status: 200
+    note: Soft 404 — redirects to https://www.bchydro.com/siteinfo/404.html.
+  - url: https://www.bchydro.com/api
+    status: 200
+    note: Soft 404 — redirects to /siteinfo/404.html.
+  - url: https://www.bchydro.com/data
+    status: 200
+    note: Soft 404 — redirects to /siteinfo/404.html.
+  - url: https://www.bchydro.com/openapi.json
+    status: 200
+    note: Soft 404 — redirects to /siteinfo/404.html. No OpenAPI.
+  - url: https://www.bchydro.com/swagger.json
+    status: 200
+    note: Soft 404 — redirects to /siteinfo/404.html. No Swagger.
+  - url: https://www.bchydro.com/.well-known/openid-configuration
+    status: 200
+    note: Soft 404 — redirects to /siteinfo/404.html.
+  - url: https://www.bchydro.com/api-docs
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial, not a document.
+  - url: https://www.bchydro.com/.well-known/security.txt
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial. No security.txt served.
+  - url: https://app.bchydro.com/.well-known/openid-configuration
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial. No OIDC discovery document.
+  - url: https://app.bchydro.com/openapi.json
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial.
+  - url: https://app.bchydro.com/swagger.json
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial.
+  - url: https://www.bchydro.com/robots.txt
+    status: 200
+    note: Body is the F5 WAF "Request Rejected" interstitial when fetched programmatically.
+  - url: https://www.bchydro.com/sitemap.xml
+    status: 200
+    note: >-
+      Real XML sitemap, 538 KB, 3,703 URLs. Enumerated for "developer" (0
+      hits), "open-data" (0 hits), "api" (27 hits, all unrelated words such as
+      "capital plan" and "rapid voltage changes"). No developer or open-data
+      area exists.
+  - url: https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+    status: 200
+    note: >-
+      Source of the Green Button evidence — "Download a CSV or Green Button XML
+      file with your metered electricity use." Also lists CSV billing history
+      and PDF annual bill summary, up to three years of history.
+  - url: https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html
+    status: 200
+    note: >-
+      Load data access. kWh in one-hour intervals; multi-unit/strata peak load
+      data by request form; contractors/consultants may request on a customer's
+      behalf subject to proof of authorization. No API or feed.
+  - url: https://app.bchydro.com/accounts-billing/my-account/conservation-consumption/consumption-graphs/data-download-consumption-data.html
+    status: 200
+    note: Data download page; content is gated behind the portal shell when fetched anonymously.
+  - url: https://app.bchydro.com/datadownload/web/download-centre-overview.html
+    status: 200
+    note: Data Download Centre overview; no format, API, SFTP, or scheduling detail available anonymously.
+  - url: https://www.bchydro.com/login
+    status: 200
+    note: >-
+      Redirects to
+      https://app.bchydro.com/sso/UI/Login?goto=...&realm=bch-ps — ForgeRock/
+      OpenAM-style customer SSO. This is the auth model.
+  - url: https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/oasis.html
+    status: 200
+    note: >-
+      "allows registered users to make reservations for transmission service on
+      the BC Hydro transmission system"; created per FERC requirements. Links
+      out to OATI-hosted nodes.
+  - url: http://www.oasis.oati.com/cwo_default.htm
+    status: 000
+    note: Connection failure anonymously — OASIS node not reachable without registration/client access.
+  - url: https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/transaction-data.html
+    status: 200
+    note: >-
+      Economic test results daily, Network Economy and Non-Firm utilization
+      reports weekly, quarterly/annual Network Economy reports, "Pursuant to
+      B.C. Utilities Commission Order Number G-127-06." Documents, not feeds.
+  - url: https://www.bchydro.com/powersmart/electric-vehicles/public-charging/charging-rates-roaming.html
+    status: 200
+    note: >-
+      Names roaming partners (Blink, ChargePoint, Electric Circuit, EV Start,
+      EVCS, FLO, Hypercharge, Ivy, Plug EV, Shell Recharge, Swtch) and OEM apps
+      (BMW, Ford, Nissan, Vinfast). NO protocol named — no OCPI, OCPP, ISO
+      15118 or Plug and Charge reference — and no developer access. Roaming is
+      commercial, not published as an API.
+  - url: https://www.bchydro.com/power-outages/app/outages-map-data.json
+    status: 200
+    note: >-
+      Undocumented JSON array of live outages, application/json, 26,749 bytes,
+      18 records, parsed successfully. Anonymous but undocumented and
+      unlicensed — recorded here, deliberately NOT listed as an API.
+  - url: https://www.bchydro.com/power-outages/app/get-outages.json
+    status: 404
+    note: Hard 404.
+  - url: https://www.bchydro.com/power-outages/app/outage-map-data.json
+    status: 404
+    note: Hard 404.
+  - url: https://catalogue.data.gov.bc.ca/api/3/action/organization_list?q=hydro
+    status: 200
+    note: Returns ["bc-hydro-and-power-authority"] — BC Hydro is a publisher org in the provincial CKAN catalogue.
+  - url: https://catalogue.data.gov.bc.ca/api/3/action/package_search?fq=organization:bc-hydro-and-power-authority&rows=100
+    status: 200
+    note: >-
+      count = 1. Only "BC Hydro Resource Options Mapping - 2013," exposed as an
+      OGC WMS GetCapabilities service and a KML loader on openmaps.gov.bc.ca.
+  - url: https://www.greenbuttonalliance.org/certification
+    status: 200
+    note: >-
+      Describes the GBA Connect My Data and Download My Data testing programs.
+      No certified-utility list on the page; BC Hydro not named; only Canadian
+      organization named is Enbridge Gas as a GBA Sponsor Member.
+  - url: https://www.bcuc.com/
+    status: 200
+    note: Regulator. Economic regulation of BC Hydro; no energy data mandate.
+  - url: https://github.com/bchydro
+    status: 404
+    note: No BC Hydro GitHub organization at the obvious handle.
+  - url: https://www.linkedin.com/company/bc-hydro
+    status: 200
+    note: Corporate LinkedIn presence.
+
+findings:
+  summary: >-
+    BC Hydro is the unmandated end of the Canadian energy data spectrum and it
+    shows. It is a provincial Crown corporation and monopoly retailer, rate-
+    regulated by the BCUC, and no consumer data right binds it — Ontario Reg
+    633/21 stops at Ontario's border and Canada has no federal energy
+    equivalent. BC Hydro nonetheless supports Green Button voluntarily, but
+    only the Download My Data file half: the customer signs into MyHydro and
+    downloads a CSV or Green Button XML file of their own metered use. There is
+    no Connect My Data, no OAuth surface, no third-party onboarding, no base
+    URI, and no certification, so no third party can reach a customer's data
+    programmatically. On the other axis there is no developer subdomain, no
+    /developers or /api path, no OpenAPI or Swagger anywhere in a 3,703-URL
+    sitemap, and no open data portal; wholesale transmission information sits
+    behind a registration-only OATI OASIS node and BCUC-ordered postings are
+    documents. The only genuinely open artifacts are one 2013 mapping layer in
+    the provincial BC Data Catalogue and an undocumented outage-map JSON feed
+    that BC Hydro never claims as an API. Zero machine-readable API contracts
+    were harvested.
+  apisListed: 0
+  developerPortal: null
+  openapiHarvested: false
+  specsCount: 0
+  gated: true
+  contrast: >-
+    Against Hydro One, profiled the same day: an Ontario distributor is
+    compelled by regulation to run a live Green Button CMD OAuth 2.0
+    authorization surface with a published vendor onboarding form and terms and
+    conditions, however privately its base URI is issued. BC Hydro, larger and
+    unmandated, offers the same standard's file format and nothing a developer
+    can call. The mandate is the difference, and it is a province-level one.
+
+sources:
+  - url: https://www.bchydro.com/about.html
+    type: About
+    note: >-
+      "provincial Crown corporation, owned by the government and people of
+      British Columbia"; generates and delivers electricity to "95% of the
+      population of B.C."; serves "over five million people"; Province of B.C.
+      is "sole shareholder"; BCUC oversight.
+  - url: https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html
+    type: Documentation
+    note: Green Button XML / CSV download evidence.
+  - url: https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html
+    type: Documentation
+    note: Load data access, request forms, one-hour interval kWh, no API.
+  - url: https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/oasis.html
+    type: Documentation
+    note: OASIS is registered-users-only.
+  - url: https://www.bchydro.com/energy-in-bc/operations/transmission/transmission-scheduling/transaction-data.html
+    type: Documentation
+    note: BCUC Order G-127-06 postings; documents, not feeds.
+  - url: https://www.bchydro.com/powersmart/electric-vehicles/public-charging/charging-rates-roaming.html
+    type: Documentation
+    note: EV roaming partners listed; no protocol, no developer access.
+  - url: https://catalogue.data.gov.bc.ca/api/3/action/package_search?fq=organization:bc-hydro-and-power-authority&rows=100
+    type: OpenData
+    note: One dataset only.
+  - url: https://www.greenbuttonalliance.org/certification
+    type: Standard
+    note: GBA certification programs; BC Hydro not listed.
+
+actions:
+  apisYmlUpdated: true
+  openapiDirCreated: false
+  reason: >-
+    apis[] is deliberately EMPTY. BC Hydro documents no public API. The Green
+    Button XML export is a human-initiated file download inside an
+    authenticated portal, not an API; the outage JSON feed is real but wholly
+    undocumented; the BC Data Catalogue WMS service is published by the
+    Province, not by BC Hydro as an API product. No spec was harvested because
+    none exists, so no openapi/ directory was created rather than inventing
+    one.
