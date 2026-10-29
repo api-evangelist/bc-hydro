@@ -1,4 +1,4 @@
-# BC Hydro (bc-hydro)
+# BC Hydro
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,82 +64,92 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-British Columbia Hydro and Power Authority (BC Hydro) is a provincial Crown corporation whose sole shareholder is the Province of British Columbia, and which states that it generates and delivers electricity to "95% of the population of B.C." and serves "over five million people." It is the vertically integrated end of the value chain in a market with no retail competition: BC Hydro owns the generation fleet (predominantly large hydroelectric), owns and operates the provincial transmission and distribution system, and is the monopoly retailer that bills the customer — all under rate regulation by the B.C. Utilities Commission (BCUC), not under any consumer data right.
+British Columbia Hydro and Power Authority (BC Hydro) is a provincial Crown corporation whose sole shareholder is the Province of British Columbia, and which states that it generates and delivers electricity to "95% of the population of B.C." and serves "over five million people." It is the vertically integrated end of the value chain in a market with no retail competition: BC Hydro owns the generation fleet (predominantly large hydroelectric), owns and operates the provincial transmission and distribution system, and is the monopoly retailer that bills the customer — all under rate regulation by the B.C. Utilities Commission (BCUC), not under any consumer data right. That regulatory fact drives the entire API posture. Ontario Regulation 633/21 compels Ontario distributors to implement Green Button Download My Data and Connect My Data; British Columbia has no equivalent, and no Canadian federal energy data mandate exists. BC Hydro has nonetheless adopted Green Button voluntarily — but only the file half of it. BC Hydro's own MyHydro billing pages state that a customer can "Download a CSV or Green Button XML file with your metered electricity use," available through the previous day and up to three years back. There is no Connect My Data, no OAuth authorization surface, no third-party vendor onboarding, and no published resource base URI: a third party cannot obtain a customer's usage data through any documented API, only the account holder can, by logging in and downloading a file. On the market-data side the picture is just as closed. There is no developer.bchydro.com, api.bchydro.com, data.bchydro.com or docs.bchydro.com (all DNS failures), no /developers, /api or /data path, no OpenAPI or Swagger definition anywhere, and no open data portal. Wholesale transmission information is posted to an OATI-hosted OASIS node that only registered transmission customers may use, and the BCUC-ordered transaction-data postings are documents rather than feeds. The single deliberate open-data artifact is one 2013 mapping layer published to the provincial BC Data Catalogue under the org "bc-hydro-and-power-authority." The finding is a utility that is closed on both axes: consumer data exists in a real standard but only as a human-initiated download behind a customer login, and grid/market data is either registration-gated or absent.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/bc-hydro/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/bc-hydro/refs/heads/main/apis.yml)
+**Areas:** Energy · Canada · Utilities · Electricity · Crown Corporation · Hydroelectric · Renewables · Grid · Transmission · Distribution · Smart Metering · Green Button
 
-## Tags
+## BC Hydro on APIs.io
 
-- Energy
-- Canada
-- Utilities
-- Electricity
-- Crown Corporation
-- Hydroelectric
-- Renewables
-- Grid
-- Transmission
-- Distribution
-- Smart Metering
-- Green Button
-- Energy Data
-- EV Charging
+Everything profiled for BC Hydro is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/bc-hydro/](https://apis.io/providers/bc-hydro/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-27
-- **Modified:** 2026-07-27
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### JSON Schema (1)
 
-None. BC Hydro documents no public API.
+The data models the API reads and writes.
 
-There is no `developer.bchydro.com`, `developers.bchydro.com`, `docs.bchydro.com` or `data.bchydro.com` — none resolve. There is no `/developers`, `/api` or `/data` path, no `/openapi.json` or `/swagger.json`, and no OpenAPI, Swagger, or Postman artifact anywhere across the 3,703 URLs in the site's own `sitemap.xml`. No open data portal is published.
+- [BC Hydro outage map feed record](https://apis.io/schemas/bc-hydro/bc-hydro-outages-map/)
 
-`api.bchydro.com` does resolve — to a BC Hydro-owned IP that completes a TLS 1.3 handshake with a valid Entrust OV certificate issued to "British Columbia Hydro and Power Authority" — but it refuses TLS 1.2 and returns nothing to any anonymous HTTP request on any path. A BC Hydro API host exists; nothing about it is public or documented, so it is not listed as an API.
+#### Security (2)
 
-## Energy data posture
+Authentication, trust centre, and vulnerability disclosure.
 
-- **Mandate regime:** `green-button-voluntary`. No consumer energy data mandate binds BC Hydro. Ontario Regulation 633/21 compels Ontario distributors to implement Green Button Download My Data and Connect My Data; it has no force in British Columbia, and Canada has no federal energy equivalent.
-- **Mandate status:** `voluntary-adopted`. BC Hydro's own billing page states a customer can "Download a CSV or Green Button XML file with your metered electricity use," available through the previous day, with up to three years of history. No Green Button Alliance certification, ESPI version, or conformance claim was found, and the file could not be inspected because it is emitted only inside an authenticated session.
-- **Data standard:** Green Button / ESPI, Download My Data file export only. No Connect My Data. No CDR Consumer Data Standards, OCPP, OCPI, OpenADR, IEEE 2030.5, or IEC CIM reference anywhere on the site.
-- **Consumer data API:** No. A third party cannot obtain a customer's usage or billing data through any documented API. Only the account holder can, by signing in and downloading a file.
-- **Market data open:** No. Wholesale transmission information goes to an OATI-hosted OASIS node open to "registered users" only, and the BCUC Order G-127-06 transaction-data postings are documents. The only deliberate open-data artifact is one 2013 mapping layer in the provincial BC Data Catalogue under the org `bc-hydro-and-power-authority`.
-- **Access gate:** `customer-account-required`. There is nothing for a developer to sign up for — be a BC Hydro customer, register for MyHydro, sign in, download your own file.
-- **Auth model:** Customer-portal session SSO. `https://www.bchydro.com/login` redirects to a ForgeRock/OpenAM-style endpoint at `https://app.bchydro.com/sso/UI/Login?goto=...&realm=bch-ps`. No OAuth 2.0 authorization or token endpoint for third parties, no client registration, no mTLS, no accreditation path. `/.well-known/openid-configuration` is rejected by the site WAF rather than served.
-- **Home market:** Canada — British Columbia.
+- [Bc Hydro Authentication](https://apis.io/security/bc-hydro/bc-hydro-authentication/)
+- [Bc Hydro Domain Security](https://apis.io/security/bc-hydro/bc-hydro-domain-security/)
 
-Full probe log, HTTP statuses, and evidence are recorded in [review.yml](review.yml).
+## Where to find this API
 
-## Artifacts
-
-Every artifact below records what was probed and what was found — the misses are the finding.
-
-- [authentication/bc-hydro-authentication.yml](authentication/bc-hydro-authentication.yml) — MyHydro customer-portal SSO (ForgeRock/OpenAM, realm `bch-ps`); no third-party auth, no OAuth, no discovery document.
-- [conventions/bc-hydro-conventions.yml](conventions/bc-hydro-conventions.yml) — the semantics of the two real surfaces: the authenticated file export and the undocumented outage JSON feed (soft 404s, WAF behaviour, epoch-ms timestamps, no pagination, no idempotency).
-- [conformance/bc-hydro-conformance.yml](conformance/bc-hydro-conformance.yml) — Green Button DMD yes / CMD no, no OAuth, no OIDC, no OpenAPI, plus TLS/DNSSEC/DMARC and the NERC CIP-013-2 supplier programme.
-- [lifecycle/bc-hydro-lifecycle.yml](lifecycle/bc-hydro-lifecycle.yml) — no API versioning, deprecation policy, SLA, changelog or status page; the regulated tariff lifecycle instead.
-- [packages/bc-hydro-packages.yml](packages/bc-hydro-packages.yml) — no first-party SDK in any registry, no GitHub org; one unofficial community Python package.
-- [well-known/bc-hydro-well-known.yml](well-known/bc-hydro-well-known.yml) — the full `/.well-known/` probe index (all soft 404s) plus the `api.bchydro.com` TLS finding.
-- [security/bc-hydro-domain-security.yml](security/bc-hydro-domain-security.yml) — TLS 1.3, HSTS, DNSSEC signed, SPF, DMARC `p=reject`, no CAA.
-- [json-schema/bc-hydro-outages-map.json](json-schema/bc-hydro-outages-map.json) + [examples/](examples/bc-hydro-outages-map-example.json) — a schema **derived by API Evangelist** from a live fetch of the undocumented outage-map feed. Not a BC Hydro contract.
-- [llms/bc-hydro-llms.txt](llms/bc-hydro-llms.txt) — generated agent briefing on what exists and what does not.
-
-No `openapi/`, `overlays/`, `errors/`, `scopes/`, `data-model/`, `skills/`, `mcp/`, `arazzo/`, `asyncapi/`, `sandbox/`, `cli/`, `components/` or `changelog/` artifacts were created: there is no specification to ground them in and BC Hydro publishes none of those surfaces. Nothing was invented to fill a directory.
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.bchydro.com/)
-- [About](https://www.bchydro.com/about.html)
-- [Documentation — bill, billing history and Green Button XML / CSV downloads](https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html)
-- [Documentation — access load data](https://app.bchydro.com/accounts-billing/rates-energy-use/access-load-data.html)
-- [Authentication — MyHydro login](https://www.bchydro.com/login)
-- [Privacy Policy](https://www.bchydro.com/siteinfo/privacy.html)
-- [Blog / Press Centre](https://www.bchydro.com/news/press_centre.html)
-- [LinkedIn](https://www.linkedin.com/company/bc-hydro)
-- [Regulator — B.C. Utilities Commission](https://www.bcuc.com/)
-- [Standard — Green Button Alliance](https://www.greenbuttonalliance.org/)
+- [Documentation](https://app.bchydro.com/accounts-billing/bill-payment/view-bill.html)
+- [Support](https://www.bchydro.com/contact.html)
+- [Blog](https://www.bchydro.com/news/press_centre.html)
+- [Compliance](https://www.bchydro.com/work-with-us/suppliers/doing-business-with-bchydro/contractor-cybersecurity.html)
+- [Terms of service](https://www.bchydro.com/siteinfo/legal.html)
+- [Privacy policy](https://www.bchydro.com/siteinfo/privacy.html)
 
-## Maintainers
+## API Evangelist rating
 
-- Kin Lane — kin@apievangelist.com
+**Kin Score 14.1** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 49.1 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 11.9 |
+| Access clarity | 18.4 |
+
+**Agent readiness 2.5** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 19.3** — Energy & Utilities
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/bc-hydro/](https://apis.io/providers/bc-hydro/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for BC Hydro: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/bc-hydro/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
